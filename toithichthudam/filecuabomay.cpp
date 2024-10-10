@@ -26,7 +26,6 @@ using u64 = unsigned long long;
 using u32 = unsigned;
 struct DSU {
     std::vector<int> f, siz;
-    
     DSU() {}
     DSU(int n) {
         init(n);
