@@ -63,13 +63,50 @@ def BondPrice():
     # Tính Market Price của Bond
     bond_price = calculate_bond_price(coupon_rate, face_value, years_to_maturity, interest_rate, payments_per_year)
     print(f"Bond Price (from Interest Rate): {bond_price:.2f} ")
+# Hàm tính giá của Stock
+def caculate_stock_price(dividend,interest_rate,growth_rate,years_of_stock_price):
+    dividend_next_period = dividend * ((1 + growth_rate) ** (1+years_of_stock_price)) 
+    stock_price = dividend_next_period / (interest_rate - growth_rate)
+    return stock_price
 
+# Hàm tính g (Test)
+def calculate_g(Price_t, dividend, interest_rate, years_of_stock_price):
+    coupon_payment = 1000 * coupon_rate / payments_per_year
+    total_payments = int(years_to_maturity * payments_per_year)  # Đảm bảo total_payments là số nguyên
+
+    # Phương trình để giải YTM dựa trên giá thị trường
+    def bond_price_equation(ytm):
+        semi_ytm = ytm / payments_per_year
+        price = sum([coupon_payment / (1 + semi_ytm) ** t for t in range(1, total_payments + 1)]) + \
+                future_value / (1 + semi_ytm) ** total_payments
+        return price - market_price  # So sánh giá tính với giá thị trường hiện tại
+
+    ytm_solution = fsolve(bond_price_equation, 0.05) [0]   # Guess bắt đầu tại 5%
+    return ytm_solution
+# Hàm cho phép người dùng nhập liệu để tính giá Stock
+def StockPrice():
+    dividend = float(input("Nhập Devidend: "))
+    interest_rate = float(input("Nhập interest_rate (%): ")) / 100
+    growth_rate = float(input("Nhập Growthrate (%): ")) / 100
+    years_of_stock_price = float(input("Nhập số kỳ phải tính: "))
+
+    # Tính giá của Stock và print nó ra
+    stock_price = caculate_stock_price(dividend,interest_rate,growth_rate,years_of_stock_price)
+    print(f"Stock Price: {stock_price:.2f}")
+    
 if __name__ == "__main__":
     while True:
-        n = int(input("\nYTM hay PRICE > "))
+        n = int(input("\n YTM Bond hay Stock Find_g >  "))
         if n == 1:
             YTM()
+            # a = int(input("\nYTM hay Price of Bond: "))
+            # if a == 1:
+            #     YTM()
+            # elif a == 2:
+            #     BondPrice()
         elif n == 2:
             BondPrice()
-        if n == 3:
+        elif n == 3:
+            StockPrice()
+        if n == 4:
             break
